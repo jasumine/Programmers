@@ -26,6 +26,8 @@ string solution0(vector<int> numlog)
 {
     string answer = "";
 
+    // i와 i+1이기 때문에  i=1 부터 시작해서 i-1이 0인 값을 확인하도록 for문을 실행한다.
+    // [i] - [i-1]의 의 차이를 보고 w, s, d, a 를 문자열에 넣어준다.
     for (int i = 1; i < numlog.size(); i++)
     {
         if (numlog[i] - numlog[i-1] == 1)
@@ -69,7 +71,10 @@ string solution0(vector<int> numlog)
 // 마지막의 값이 마지막-1의 값보다 작다면 마지막*2의 값을 추가
 vector<int> solution1(vector<int>num_list)
 {
+    // size -1이 마지막 인덱스 값이기 때문에 size -1을 해준다.
     int size = num_list.size()-1;
+
+    // size(마지막 값)과 size-1(마지막-1)의 값을 비교해서 push_back 해준다.
     if (num_list[size] > num_list[size - 1])
     {
         num_list.push_back(num_list[size] - num_list[size - 1]);
@@ -78,6 +83,8 @@ vector<int> solution1(vector<int>num_list)
     {
         num_list.push_back(num_list[size] * 2);
     }
+
+    return num_list;
 }
 
 
@@ -87,20 +94,17 @@ vector<int> solution1(vector<int>num_list)
 // ->queries[i][0]과 queries[i][1]의 값을 가져와서 해결한다.
 vector<int> solution2(vector<int> arr, vector<vector<int>> queries)
 {
-    vector<int> answer;
-    for (int i = 0; i < arr.size(); i++)
-    {
-        answer.push_back(arr[i]);
-    }
-
+    // temp를 이용해서 queries[i][0]과 queries[i][1]을 swap 해준다.
     for (int i = 0; i < queries.size(); i++)
     {
-        int temp = answer[queries[i][0]];
-        answer[queries[i][0]] = answer[queries[i][1]];
-        answer[queries[i][1]] = temp;
-       
+        int temp = arr[queries[i][0]];
+        arr[queries[i][0]] = arr[queries[i][1]];
+        arr[queries[i][1]] = temp;
     }
+
+    return arr;
 }
+
 
 // https://school.programmers.co.kr/learn/courses/30/lessons/181924
 // 수열과 구간 쿼리2
@@ -113,30 +117,38 @@ vector<int> solution3(vector<int> arr, vector<vector<int>> queries)
     {
         int s, e, k,  min;
         
+        // queires는 [s, e, k]이기 때문에 [i][0], [i][1], [i][2]로 s, e, k 를 초기화 해준다.
         s = queries[i][0];
         e = queries[i][1];
         k = queries[i][2];
-        min = 0;
+        min = 0; // k보다 큰 값들 중 가장 작은 값을 찾기 위해 min을 선언해준다.
+
+
+        // s부터 e까지 숫자 중에서
         for (int j = s; j <= e; j++) 
         {
-            // k보다 클 경우만 저장
+            // k보다 클 값들 중
             if (k < arr[j])
             {
-                // k보다 큰 값들 중에서 가장 작은값
+                // min == 0 이라면 이전에 큰 값들이 없었기 때문에 arr의 값을 넣어준다.
                 if (min==0)
                 {
                     min = arr[j];
                 }
+                // min이 0이 아니고 값이 있다면, 이전에 k보다 큰 값이였다는 뜻이고
+                // 해당 값이 arr[j]보다 크다면 그것보다 더 작은 arr[j]를 다시 min에 넣어준다.
                 else if (min > arr[j])
                 {
                     min = arr[j];
                 }
             }
         }
+        //  min이 0이라면 k보다 큰값이 없었다는 뜻으로 -1을 넣고
         if (min == 0)
         {
             answer.push_back(-1);
         }
+        // 0이 아니라면 k보다 큰값이 있었기 때문에 push_back 해준다.
         else
             answer.push_back(min);
     }
@@ -148,17 +160,21 @@ vector<int> solution3(vector<int> arr, vector<vector<int>> queries)
 
 // https://school.programmers.co.kr/learn/courses/30/lessons/181922
 // 수열과 구간 쿼리 4
-//  queries는 [s,e,k]로 이루어져있으며, i의 값이 k의 배수라면 arr[i]에 1을 더해준다.
+//  queries는 [s,e,k]로 이루어져있으며,' s<= i <=e '인 i의 값이 k의 배수라면 arr[i]에 1을 더해준다.
 // k = 2일 경우, i가 2의 배수->  arr[0], arr[2], arr[4]의 값에 +1
 vector<int> solution4(vector<int> arr, vector<vector<int>> queries)
 {
     for (int i = 0; i < queries.size(); i++)
     {
+        // queries가 [s, e, k] 로 이루어져 있기 때문에 
+        // s, e, k 는 각각 [i][0], [i][1],  [i],[2]로 초기화해준다.
         int s, e, k;
         s = queries[i][0];
         e = queries[i][1];
         k = queries[i][2];
         
+        // s<= i <= e인 i가 k의 배수라면 (k로 나눈 나머지가 0 )
+        // arr[i]에 +을 더해준다.
         for (int i = s; i <= e; i++)
         {
             if (i % k == 0)
@@ -215,10 +231,12 @@ vector<int> solution5(int l, int r)
 
 // https://school.programmers.co.kr/learn/courses/30/lessons/181920
 // 카운트 업
+// start_num부터 end_num깍지의 숫자를 차례로 담은 배열을 return
 vector<int> solution6(int start_num, int end_num)
 {
     vector<int> answer;
 
+    // start_num부터 end_num까지  push_back해준다.
     for (int i = start_num; i <= end_num; i++)
     {
         answer.push_back(i);
@@ -234,19 +252,24 @@ vector<int> solution6(int start_num, int end_num)
 vector<int> solution7(int n)
 {
     vector<int> answer;
-
+    
+    // 연산 횟수가 0부터 이기 때문에 기본 n을 push_back해준다.
     answer.push_back(n);
+
+    // 1이 될때까지 이기때문에, 조건을 n != 1로 하고 while문을 실행한다.
     while (n != 1)
     {
+        // n이 짝수면 2로 나누고
         if (n % 2 == 0)
         {
             n = n / 2;
-
         }
+        // n이 홀수면 3 * n+1을 해준다.
         else
         {
             n = n * 3 + 1;
         }
+        // 연산 후 값을 push_back해준다.
         answer.push_back(n);
     }
 
@@ -266,24 +289,26 @@ vector<int> solution8(vector<int> arr)
     int i = 0;
     while(i < arr.size())
     {
+        // stk가 비었다면
         if (stk.empty() == true)
         {
+            // push_back을 해주고 i++
             stk.push_back(arr[i]);
             i++;
         }
+        // stk가 비어 있지않고, 마지막 원소의 값이  arr[i]보다 작다면, arr[i]를 추가하고 i++
         else if (stk.empty()==false && stk.back() < arr[i])
         {
             stk.push_back(arr[i]);
             i++;
         }
+        // stk가 비어 있지 않고, 마지막 원소의 값이 arr[i]보다 크거나 같다면 stk마지막 원소를 제거한다.
+        // i는 더 해주지않는다.
         else if (stk.empty() == false && stk.back() >= arr[i])
         {
             stk.pop_back();
         }
     }
-
-
-
 
     return stk;
 }
